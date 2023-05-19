@@ -1,6 +1,13 @@
 import { refresh, user } from "@/util/atom";
 import { db } from "@/util/firebase";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore/lite";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+  increment,
+} from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 
@@ -45,6 +52,13 @@ const Board = () => {
     setRefreshing(true);
   };
 
+  const onReport = async (id: string) => {
+    const reportedDoc = doc(db, "wauwt", id);
+    await updateDoc(reportedDoc, {
+      reportedCount: increment(1),
+    });
+  };
+
   useEffect(() => {
     getData();
   }, [refreshing]);
@@ -52,27 +66,36 @@ const Board = () => {
     <div>
       {contents?.map((data: Content, index: number) => (
         <div key={index} className="w-full bg-white p-5 rounded-2xl mb-4">
-          <h4 className="font-semibold text-lg pb-1">
-            랜선친구 {data.randomNum}
-          </h4>
-          <p className="mb-1">{data.content}</p>
-          <div className="flex justify-between">
-            <p className="text-zinc-600 text-sm">
-              {timeStampConvertor(data.createdAt)}
-            </p>
-            {data.uid === userInfo.uid ? (
-              <button
-                onClick={() => onDelete(data.id)}
-                className="p-1 px-2 text-white bg-red-600 rounded-md text-sm"
-              >
-                삭제
-              </button>
-            ) : (
-              <button className="p-1 px-2 text-white bg-red-600 rounded-md text-sm">
-                신고
-              </button>
-            )}
-          </div>
+          {data.reportedCount >= 3 ? (
+            <h2>신고가 3회 이상 접수되어 가려진 글입니다.</h2>
+          ) : (
+            <>
+              <h4 className="font-semibold text-lg pb-1">
+                랜선친구 {data.randomNum}
+              </h4>
+              <p className="mb-1">{data.content}</p>
+              <div className="flex justify-between">
+                <p className="text-zinc-600 text-sm">
+                  {timeStampConvertor(data.createdAt)}
+                </p>
+                {data.uid === userInfo.uid ? (
+                  <button
+                    onClick={() => onDelete(data.id)}
+                    className="p-1 px-2 text-white bg-red-600 rounded-md text-sm"
+                  >
+                    삭제
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => onReport(data.id)}
+                    className="p-1 px-2 text-white bg-red-600 rounded-md text-sm"
+                  >
+                    신고
+                  </button>
+                )}
+              </div>
+            </>
+          )}
         </div>
       ))}
     </div>
