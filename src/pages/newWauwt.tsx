@@ -14,8 +14,8 @@ const NewWauwt = () => {
 
   const newWauwt = async () => {
     const docRef = await addDoc(collection(db, "wauwt"), {
+      uid: userInfo.uid, //유저 익명로그인 아이디
       content: content.current?.value,
-      id: userInfo.uid,
       ip: userInfo.ip,
       location: {
         lat: location.lat,

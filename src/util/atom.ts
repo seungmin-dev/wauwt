@@ -22,7 +22,7 @@ export const user = atom({
 
 export const weatherBgState = atom({
   key: "weatherBg",
-  default: "",
+  default: "default",
 });
 
 export const refresh = atom({
