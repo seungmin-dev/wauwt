@@ -5,22 +5,42 @@ import Board from "@/components/board";
 import Layout from "@/components/layout";
 import NewWauwt from "./newWauwt";
 import { useRecoilState } from "recoil";
-import { curLocation, newMemoState, userIp } from "@/util/atom";
+import { curLocation, loginState, newMemoState, user } from "@/util/atom";
+import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
+import { auth } from "@/util/firebase";
 
 const Home = () => {
-  const [login, setLogin] = useState(true);
+  const [loggedIn, setLoggedIn] = useRecoilState(loginState);
   const [newNote, setNewNote] = useRecoilState(newMemoState);
   const [location, setLocation] = useRecoilState(curLocation);
-  const [ip, setIp] = useRecoilState(userIp);
+  const [userInfo, setUserInfo] = useRecoilState(user);
+  const [loginSuccess, setLoginSuccess] = useState(false);
   const getIp = async () => {
     const data = await userIpApi();
-    // console.log(data);
     setLocation({
       lat: data.data.latitude,
       lon: data.data.longitude,
     });
-    setIp(data.data.ip);
-    console.log("index ip location");
+    setUserInfo({ uid: "", ip: data.data.ip });
+  };
+
+  const getLogin = () => {
+    signInAnonymously(auth)
+      .then(() => {
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            setUserInfo({ uid: user.uid, ip: userInfo.ip });
+            setLoggedIn(true);
+            setLoginSuccess(true);
+          } else {
+          }
+        });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("익명로그인 오류 : ", errorMessage);
+      });
   };
 
   useEffect(() => {
@@ -31,17 +51,37 @@ const Home = () => {
     <Layout>
       {newNote ? <NewWauwt /> : ""}
       <div className="flex justify-between items-center py-7 p-5 bg-white rounded-t-3xl">
+        {loginSuccess ? (
+          <div className="w-full h-full bg-black/50 absolute left-0 top-0 rounded-3xl pt-40">
+            <div className="w-1/2 text-center bg-white p-8 rounded-2xl m-auto">
+              <h2 className="text-center font-semibold text-lg pb-4">
+                익명로그인 성공!
+              </h2>
+              <button
+                onClick={() => setLoginSuccess(false)}
+                className="px-5 h-10 text-white bg-pink-100 rounded-md text-sm"
+              >
+                💖
+              </button>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
         <Weather />
-        {login ? (
-          <button className="px-2 h-10 text-white bg-sky-700 rounded-md text-sm">
-            로그인
+        {loggedIn ? (
+          <button
+            onClick={() => setNewNote((prev) => !prev)}
+            className="px-2 h-10 text-white bg-blue-600 rounded-md text-sm"
+          >
+            글쓰기
           </button>
         ) : (
           <button
-            onClick={() => setNewNote((prev) => !prev)}
+            onClick={getLogin}
             className="px-2 h-10 text-white bg-sky-700 rounded-md text-sm"
           >
-            글쓰기
+            익명로그인
           </button>
         )}
       </div>

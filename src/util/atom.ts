@@ -10,9 +10,14 @@ export const curLocation = atom({
   default: { lat: 0, lon: 0 },
 });
 
-export const userIp = atom({
-  key: "ip",
-  default: "",
+export const loginState = atom({
+  key: "loginState",
+  default: false,
+});
+
+export const user = atom({
+  key: "user",
+  default: { uid: "", ip: "" },
 });
 
 export const weatherBgState = atom({

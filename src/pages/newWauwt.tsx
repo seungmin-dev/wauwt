@@ -1,7 +1,6 @@
-import { curLocation, newMemoState, refresh, userIp } from "@/util/atom";
+import { curLocation, newMemoState, refresh, user } from "@/util/atom";
 import { db } from "@/util/firebase";
-import { getApp, getApps, initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore/lite";
+import { collection, addDoc } from "firebase/firestore/lite";
 import { useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 
@@ -9,15 +8,15 @@ const NewWauwt = () => {
   const [newNote, setNewNote] = useRecoilState(newMemoState);
   const [location, setLocation] = useRecoilState(curLocation);
   const [refreshing, setRefreshing] = useRecoilState(refresh);
-  const [ip, setIp] = useRecoilState(userIp);
-  const [done, setDone] = useState(false);
+  const [userInfo, setUserInfo] = useRecoilState(user);
+  const [done, setDone] = useState(false); // 저장성공 알림창
   const content = useRef<HTMLTextAreaElement | null>(null);
 
   const newWauwt = async () => {
     const docRef = await addDoc(collection(db, "wauwt"), {
       content: content.current?.value,
-      id: "asdgasdg",
-      ip,
+      id: userInfo.uid,
+      ip: userInfo.ip,
       location: {
         lat: location.lat,
         lon: location.lon,
@@ -31,7 +30,7 @@ const NewWauwt = () => {
     setDone(true);
   };
 
-  const memoDone = () => {
+  const memoAllDone = () => {
     setDone(false);
     setNewNote(false);
     setRefreshing(true); //목록 리프레시
@@ -49,7 +48,7 @@ const NewWauwt = () => {
             </h2>
             <div className="w-100 h-10 text-center">
               <button
-                onClick={memoDone}
+                onClick={memoAllDone}
                 className="px-2 h-10 text-white bg-yellow-600 rounded-md text-sm m-auto"
               >
                 고마워요

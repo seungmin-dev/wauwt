@@ -1,7 +1,6 @@
 import { refresh } from "@/util/atom";
 import { db } from "@/util/firebase";
-import { getApp, getApps, initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
+import { collection, getDocs } from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 
@@ -30,7 +29,7 @@ const Board = () => {
   //데이터 한번에 읽어오기
   const getData = async () => {
     const querySnapShot = await getDocs(collection(db, "wauwt"));
-    querySnapShot.forEach((data) => console.log(data.data()));
+    // querySnapShot.forEach((data) => console.log(data.data()));
     const data = querySnapShot.docs.reverse().map((doc) => ({
       id: doc.id,
       ...(doc.data() as Data),
