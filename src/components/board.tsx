@@ -1,10 +1,5 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  DocumentData,
-} from "firebase/firestore/lite";
+import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
 
 interface Data {
@@ -13,8 +8,8 @@ interface Data {
   content: string;
   location: { lat: number; lon: number };
   reportedCount: number;
-  createdAt: { seconds: number; nanoseconds: number };
-  updatedAt: Date;
+  createdAt: number;
+  updatedAt: number;
 }
 interface Content extends Data {
   id: string;
@@ -22,7 +17,6 @@ interface Content extends Data {
 
 const timeStampConvertor = (seconds: number) => {
   let convertedDate = new Date(seconds * 1000).toLocaleString();
-  console.log(convertedDate);
   return convertedDate;
 };
 
@@ -52,27 +46,20 @@ const Board = () => {
     setContents(data);
   };
 
-  //데이터 쓰기
-  //   const writeMessage = () => {
-  //     set(ref(database, 'users/' + userId), {
-  //         username: name,
-
-  //     })
-  //   }
   useEffect(() => {
     getData();
   }, []);
   return (
-    <div>
+    <div className="">
       {contents?.map((data: Content, index: number) => (
-        <div key={index} className="bg-white p-5 rounded-2xl mb-4">
+        <div key={index} className="w-full bg-white p-5 rounded-2xl mb-4">
           <h4 className="font-semibold text-lg pb-1">
             랜선친구 {data.randomNum}
           </h4>
           <p className="mb-1">{data.content}</p>
           <div className="flex justify-between">
             <p className="text-zinc-600">
-              {timeStampConvertor(data.createdAt.seconds)}
+              {timeStampConvertor(data.createdAt)}
             </p>
             <button className="p-1 px-2 text-white bg-red-600 rounded-md text-sm">
               신고
