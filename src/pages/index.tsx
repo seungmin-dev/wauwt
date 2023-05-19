@@ -2,10 +2,9 @@ import Weather from "../components/weather";
 import { useEffect, useState } from "react";
 import { userIpApi } from "./api/weather";
 import Board from "@/components/board";
-import Link from "next/link";
 import Layout from "@/components/layout";
 import NewWauwt from "./newWauwt";
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { curLocation, newMemoState, userIp } from "@/util/atom";
 
 const Home = () => {
@@ -33,7 +32,7 @@ const Home = () => {
       {newNote ? <NewWauwt /> : ""}
       <div className="flex justify-between items-center py-7 p-5 bg-white rounded-t-3xl">
         <Weather />
-        {!login ? (
+        {login ? (
           <button className="px-2 h-10 text-white bg-sky-700 rounded-md text-sm">
             로그인
           </button>

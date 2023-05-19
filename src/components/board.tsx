@@ -1,4 +1,5 @@
 import { refresh } from "@/util/atom";
+import { db } from "@/util/firebase";
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
@@ -25,18 +26,6 @@ const timeStampConvertor = (seconds: number) => {
 const Board = () => {
   const [contents, setContents] = useState<Content[]>();
   const [refreshing, setRefreshing] = useRecoilState(refresh);
-  const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FB_API_KEY,
-    authDomain: "wauwt-e4b32.firebaseapp.com",
-    projectId: "wauwt-e4b32",
-    storageBucket: "wauwt-e4b32.appspot.com",
-    messagingSenderId: "496565686145",
-    appId: "1:496565686145:web:414ba150ef96da09632280",
-    measurementId: "G-9E67M2FHPK",
-  };
-
-  const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  const db = getFirestore(app);
 
   //데이터 한번에 읽어오기
   const getData = async () => {
@@ -62,7 +51,7 @@ const Board = () => {
           </h4>
           <p className="mb-1">{data.content}</p>
           <div className="flex justify-between">
-            <p className="text-zinc-600">
+            <p className="text-zinc-600 text-sm">
               {timeStampConvertor(data.createdAt)}
             </p>
             <button className="p-1 px-2 text-white bg-red-600 rounded-md text-sm">

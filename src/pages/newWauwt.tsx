@@ -1,4 +1,5 @@
 import { curLocation, newMemoState, refresh, userIp } from "@/util/atom";
+import { db } from "@/util/firebase";
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc } from "firebase/firestore/lite";
 import { useRef, useState } from "react";
@@ -11,18 +12,6 @@ const NewWauwt = () => {
   const [ip, setIp] = useRecoilState(userIp);
   const [done, setDone] = useState(false);
   const content = useRef<HTMLTextAreaElement | null>(null);
-  const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FB_API_KEY,
-    authDomain: "wauwt-e4b32.firebaseapp.com",
-    projectId: "wauwt-e4b32",
-    storageBucket: "wauwt-e4b32.appspot.com",
-    messagingSenderId: "496565686145",
-    appId: "1:496565686145:web:414ba150ef96da09632280",
-    measurementId: "G-9E67M2FHPK",
-  };
-
-  const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  const db = getFirestore(app);
 
   const newWauwt = async () => {
     const docRef = await addDoc(collection(db, "wauwt"), {
