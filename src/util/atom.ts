@@ -19,3 +19,8 @@ export const weatherBgState = atom({
   key: "weatherBg",
   default: "",
 });
+
+export const refresh = atom({
+  key: "refresh",
+  default: false,
+});

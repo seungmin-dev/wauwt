@@ -1,6 +1,8 @@
+import { refresh } from "@/util/atom";
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 
 interface Data {
   ip: string;
@@ -22,6 +24,7 @@ const timeStampConvertor = (seconds: number) => {
 
 const Board = () => {
   const [contents, setContents] = useState<Content[]>();
+  const [refreshing, setRefreshing] = useRecoilState(refresh);
   const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FB_API_KEY,
     authDomain: "wauwt-e4b32.firebaseapp.com",
@@ -39,16 +42,17 @@ const Board = () => {
   const getData = async () => {
     const querySnapShot = await getDocs(collection(db, "wauwt"));
     querySnapShot.forEach((data) => console.log(data.data()));
-    const data = querySnapShot.docs.map((doc) => ({
+    const data = querySnapShot.docs.reverse().map((doc) => ({
       id: doc.id,
       ...(doc.data() as Data),
     }));
     setContents(data);
+    setRefreshing(false);
   };
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [refreshing]);
   return (
     <div className="">
       {contents?.map((data: Content, index: number) => (

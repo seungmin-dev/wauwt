@@ -1,4 +1,4 @@
-import { curLocation, newMemoState, userIp } from "@/util/atom";
+import { curLocation, newMemoState, refresh, userIp } from "@/util/atom";
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc } from "firebase/firestore/lite";
 import { useRef, useState } from "react";
@@ -7,6 +7,7 @@ import { useRecoilState } from "recoil";
 const NewWauwt = () => {
   const [newNote, setNewNote] = useRecoilState(newMemoState);
   const [location, setLocation] = useRecoilState(curLocation);
+  const [refreshing, setRefreshing] = useRecoilState(refresh);
   const [ip, setIp] = useRecoilState(userIp);
   const [done, setDone] = useState(false);
   const content = useRef<HTMLTextAreaElement | null>(null);
@@ -44,6 +45,7 @@ const NewWauwt = () => {
   const memoDone = () => {
     setDone(false);
     setNewNote(false);
+    setRefreshing(true); //목록 리프레시
   };
   return (
     <div className="absolute w-full h-full bg-black/60 rounded-3xl pt-40">
