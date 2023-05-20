@@ -1,5 +1,5 @@
 import Weather from "../components/weather";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { userIpApi } from "./api/weather";
 import Board from "@/components/board";
 import Layout from "@/components/layout";
@@ -17,10 +17,6 @@ const Home = () => {
   const [loginSuccess, setLoginSuccess] = useState(false);
   const getIp = async () => {
     const data = await userIpApi();
-    setLocation({
-      lat: data.data.latitude,
-      lon: data.data.longitude,
-    });
     setUserInfo({ uid: "", ip: data.data.ip });
   };
 
@@ -44,6 +40,13 @@ const Home = () => {
   };
 
   useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLocation({
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+      });
+    });
+    console.log(location);
     getIp();
   }, []);
 
