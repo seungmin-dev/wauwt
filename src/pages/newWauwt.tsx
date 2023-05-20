@@ -11,6 +11,7 @@ const NewWauwt = () => {
   const [userInfo, setUserInfo] = useRecoilState(user);
   const [done, setDone] = useState(false); // 저장성공 알림창
   const content = useRef<HTMLTextAreaElement | null>(null);
+  const maxLength = useRef<HTMLParagraphElement | null>(null);
 
   const newWauwt = async () => {
     const docRef = await addDoc(collection(db, "wauwt"), {
@@ -35,6 +36,15 @@ const NewWauwt = () => {
     setNewNote(false);
     setRefreshing(true); //목록 리프레시
   };
+
+  const checkLength = () => {
+    maxLength.current!.textContent = content.current?.value.length + "/150";
+    content.current!.value = content.current!.value.substring(0, 150);
+    maxLength.current!.className = "";
+    if (content.current!.value.length == 150)
+      maxLength.current!.className = "text-red-500";
+  };
+
   return (
     <div className="absolute w-full h-full bg-black/60 rounded-3xl pt-40">
       <div className="w-11/12 h-1/2 bg-white rounded-xl p-6 m-auto relative">
@@ -77,8 +87,10 @@ const NewWauwt = () => {
         </div>
         <textarea
           ref={content}
+          onKeyUp={checkLength}
           className="w-full h-3/5 p-4 border-gray-200 border-[1px] rounded-xl"
         />
+        <p ref={maxLength}>0/200</p>
       </div>
     </div>
   );
