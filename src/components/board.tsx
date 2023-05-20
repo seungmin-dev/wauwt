@@ -1,4 +1,4 @@
-import { refresh, user } from "@/util/atom";
+import { curLocation, refresh, user } from "@/util/atom";
 import { db } from "@/util/firebase";
 import { cls } from "@/util/utils";
 import {
@@ -8,6 +8,10 @@ import {
   doc,
   updateDoc,
   increment,
+  query,
+  collectionGroup,
+  where,
+  and,
 } from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -36,12 +40,18 @@ const Board = () => {
   const [contents, setContents] = useState<Content[]>();
   const [refreshing, setRefreshing] = useRecoilState(refresh);
   const [userInfo, setUserInfo] = useRecoilState(user);
+  const [location, setLocation] = useRecoilState(curLocation);
 
   //데이터 한번에 읽어오기
   const getData = async () => {
-    const querySnapShot = await getDocs(collection(db, "wauwt"));
-    // querySnapShot.forEach((data) => console.log(data.data()));
-    const data = querySnapShot.docs.reverse().map((doc) => ({
+    // 3일 이내 조회
+    const q1 = query(
+      collection(db, "wauwt"),
+      where("createdAt", ">=", Number(new Date()) / 1000 - 259200)
+    );
+
+    let querySnapShot = await getDocs(q1);
+    const data = querySnapShot.docs.map((doc) => ({
       id: doc.id,
       ...(doc.data() as Data),
     }));
