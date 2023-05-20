@@ -1,5 +1,6 @@
 import { refresh, user } from "@/util/atom";
 import { db } from "@/util/firebase";
+import { cls } from "@/util/utils";
 import {
   collection,
   getDocs,
@@ -26,7 +27,8 @@ interface Content extends Data {
 }
 
 const timeStampConvertor = (seconds: number) => {
-  let convertedDate = new Date(seconds * 1000).toLocaleString();
+  let time = new Date(seconds * 1000).toLocaleString();
+  let convertedDate = time.slice(0, time.length - 3);
   return convertedDate;
 };
 
@@ -65,7 +67,13 @@ const Board = () => {
   return (
     <div>
       {contents?.map((data: Content, index: number) => (
-        <div key={index} className="w-full bg-white p-5 rounded-2xl mb-4">
+        <div
+          key={index}
+          className={cls(
+            "w-full p-5 rounded-2xl mb-4",
+            data.uid === userInfo.uid ? "bg-blue-100" : "bg-white"
+          )}
+        >
           {data.reportedCount >= 3 ? (
             <h2>신고가 3회 이상 접수되어 가려진 글입니다.</h2>
           ) : (
