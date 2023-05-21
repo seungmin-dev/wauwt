@@ -79,6 +79,7 @@ const Board = () => {
     await updateDoc(reportedDoc, {
       reportedCount: increment(1),
     });
+    setRefreshing(true);
   };
 
   useEffect(() => {
