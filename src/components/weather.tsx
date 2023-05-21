@@ -1,5 +1,10 @@
 import { curLocation, weatherBgState } from "@/util/atom";
-import { weatherApi } from "@/pages/api/weather";
+import {
+  getAccessToken,
+  getChangeCoords,
+  getReverseGeo,
+  weatherApi,
+} from "@/pages/api/weather";
 import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -15,31 +20,61 @@ const Weather = () => {
   const [location, setLocation] = useRecoilState(curLocation);
   const [weatherData, setWeatherData] = useState<WeatherObj>();
   const [weatherBg, setWeatherBg] = useRecoilState(weatherBgState);
+  const [addr, setAddr] = useState("");
 
   const getWeather = async () => {
     const { data }: WeatherObj = await weatherApi(location.lat, location.lon);
     setWeatherBg(data?.weather[0].icon);
     setWeatherData(data);
   };
+  const getCoords = async () => {
+    const { data: tokenData } = await getAccessToken();
+    const { data: coordsData } = await getChangeCoords(
+      tokenData.result.accessToken,
+      location.lat,
+      location.lon
+    );
+    const { data: rgeoData } = await getReverseGeo(
+      tokenData.result.accessToken,
+      coordsData.result.posX,
+      coordsData.result.posY
+    );
+    setAddr(rgeoData.result[0].full_addr);
+  };
   useEffect(() => {
-    if (location.lat !== 0 && location.lon !== 0) getWeather();
+    if (location.lat !== 0 && location.lon !== 0) {
+      getWeather();
+      getCoords();
+    }
   }, [location]);
 
   return (
     <div style={{ flexGrow: 1, paddingRight: "10px" }}>
+      <div className="flex">
+        {addr ? (
+          <>
+            <p className="pr-2 font-semibold">현재 위치</p>
+            <p>{addr}</p>
+          </>
+        ) : (
+          <p>위치 정보 로딩 중...</p>
+        )}
+      </div>
       {weatherData ? (
         <>
-          <div className="flex">
-            <p className="pr-2">현재 위치</p>
-            <p>{weatherData?.name}</p>
-          </div>
           <div className="flex justify-between">
-            <p>날씨</p>
-            <p>{weatherData?.weather[0].description}</p>
-            <p>기온</p>
-            <p>{weatherData?.main.temp}℃</p>
-            <p>체감</p>
-            <p>{weatherData?.main.feels_like}℃</p>
+            <div className="flex">
+              <p className="font-semibold mr-2">날씨</p>
+              <p>{weatherData?.weather[0].description}</p>
+            </div>
+            <div className="flex">
+              <p className="font-semibold mr-2">기온</p>
+              <p>{weatherData?.main.temp}℃</p>
+            </div>
+            <div className="flex">
+              <p className="font-semibold mr-2">체감</p>
+              <p>{weatherData?.main.feels_like}℃</p>
+            </div>
           </div>
         </>
       ) : (

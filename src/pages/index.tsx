@@ -46,7 +46,6 @@ const Home = () => {
         lon: position.coords.longitude,
       });
     });
-    console.log(location);
     getIp();
   }, []);
 
@@ -75,14 +74,14 @@ const Home = () => {
         {loggedIn ? (
           <button
             onClick={() => setNewNote((prev) => !prev)}
-            className="px-2 h-10 text-white bg-blue-600 rounded-md text-sm"
+            className="px-2 h-10 text-white bg-blue-600 rounded-md text-sm ml-3"
           >
             글쓰기
           </button>
         ) : (
           <button
             onClick={getLogin}
-            className="px-2 h-10 text-white bg-sky-700 rounded-md text-sm"
+            className="px-2 h-10 text-white bg-sky-700 rounded-md text-sm ml-3"
           >
             익명로그인
           </button>
