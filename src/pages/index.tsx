@@ -7,7 +7,16 @@ import NewWauwt from "./newWauwt";
 import { useRecoilState } from "recoil";
 import { curLocation, loginState, newMemoState, user } from "@/util/atom";
 import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { auth } from "@/util/firebase";
+import { auth, db } from "@/util/firebase";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore/lite";
 
 const Home = () => {
   const [loggedIn, setLoggedIn] = useRecoilState(loginState);
@@ -39,7 +48,23 @@ const Home = () => {
       });
   };
 
+  const deleteOver3days = async () => {
+    const over3days = query(
+      collection(db, "wauwt"),
+      where("createdAt", "<=", Number(new Date()) / 1000 - 259200)
+    );
+    let querySnapShot = await getDocs(over3days);
+    let idArr: string[] = [];
+    querySnapShot.forEach((doc) => {
+      idArr.push(doc.id);
+    });
+    for (let i = 0; i < idArr.length; i++) {
+      await deleteDoc(doc(db, "wauwt", idArr[i]));
+    }
+  };
+
   useEffect(() => {
+    deleteOver3days();
     navigator.geolocation.getCurrentPosition((position) => {
       setLocation({
         lat: position.coords.latitude,
