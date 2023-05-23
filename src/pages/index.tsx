@@ -5,7 +5,13 @@ import Board from "@/components/board";
 import Layout from "@/components/layout";
 import NewWauwt from "./newWauwt";
 import { useRecoilState } from "recoil";
-import { curLocation, loginState, newMemoState, user } from "@/util/atom";
+import {
+  curLocation,
+  loginState,
+  newMemoState,
+  refresh,
+  user,
+} from "@/util/atom";
 import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { auth, db } from "@/util/firebase";
 import {
@@ -17,6 +23,8 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore/lite";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
   const [loggedIn, setLoggedIn] = useRecoilState(loginState);
@@ -24,6 +32,7 @@ const Home = () => {
   const [location, setLocation] = useRecoilState(curLocation);
   const [userInfo, setUserInfo] = useRecoilState(user);
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [refreshing, setRefreshing] = useRecoilState(refresh);
   const getIp = async () => {
     const data = await userIpApi();
     setUserInfo({ uid: "", ip: data.data.ip });
@@ -111,6 +120,12 @@ const Home = () => {
             익명로그인
           </button>
         )}
+        <button
+          onClick={() => setRefreshing(true)}
+          className="px-2 h-10 text-white bg-sky-700 rounded-md text-sm ml-3"
+        >
+          <FontAwesomeIcon icon={faArrowsRotate} />
+        </button>
       </div>
       <div className="p-6 w-full h-5/6 overflow-y-scroll">
         <Board />
