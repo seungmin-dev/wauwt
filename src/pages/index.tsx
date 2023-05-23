@@ -105,27 +105,31 @@ const Home = () => {
           ""
         )}
         <Weather />
-        {loggedIn ? (
+        <div className="w-16 flex flex-col">
+          {loggedIn ? (
+            <button
+              onClick={() => setNewNote((prev) => !prev)}
+              className="px-2 h-10 text-white bg-blue-600 rounded-md text-sm mb-1"
+            >
+              글쓰기
+            </button>
+          ) : (
+            <button
+              onClick={getLogin}
+              className="px-2 h-10 text-white bg-blue-600 rounded-md text-sm mb-1"
+            >
+              익명
+              <br />
+              로그인
+            </button>
+          )}
           <button
-            onClick={() => setNewNote((prev) => !prev)}
-            className="px-2 h-10 text-white bg-blue-600 rounded-md text-sm ml-3"
+            onClick={() => setRefreshing(true)}
+            className="px-3 h-10 text-white bg-green-600 rounded-md text-sm"
           >
-            글쓰기
+            <FontAwesomeIcon icon={faArrowsRotate} />
           </button>
-        ) : (
-          <button
-            onClick={getLogin}
-            className="px-2 h-10 text-white bg-sky-700 rounded-md text-sm ml-3"
-          >
-            익명로그인
-          </button>
-        )}
-        <button
-          onClick={() => setRefreshing(true)}
-          className="px-2 h-10 text-white bg-sky-700 rounded-md text-sm ml-3"
-        >
-          <FontAwesomeIcon icon={faArrowsRotate} />
-        </button>
+        </div>
       </div>
       <div className="p-6 w-full h-5/6 overflow-y-scroll">
         <Board />

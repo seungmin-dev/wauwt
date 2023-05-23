@@ -66,7 +66,7 @@ const Board = () => {
     // );
 
     let querySnapShot = await getDocs(q1);
-    querySnapShot.docs.forEach((doc) => console.log(doc.data()));
+    // querySnapShot.docs.forEach((doc) => console.log(doc.data()));
     const data = querySnapShot.docs.map((doc) => ({
       id: doc.id,
       ...(doc.data() as Data),
