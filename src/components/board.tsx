@@ -107,8 +107,8 @@ const Board = () => {
             key={index}
             className={cls(
               "w-full p-5 rounded-2xl mb-4",
-              data.uid === userInfo.uid ? "bg-blue-100" : "bg-white",
-              reportedId === data.id ? "bg-red-100" : "bg-white"
+              data.uid === userInfo.uid ? "bg-blue-100" : "bg-white"
+              // reportedId === data.id ? "bg-red-100" : "bg-white"
             )}
           >
             {reportedId === data.id ? (
