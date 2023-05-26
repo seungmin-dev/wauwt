@@ -42,7 +42,8 @@ const Board = () => {
   const [userInfo, setUserInfo] = useRecoilState(user);
   const [location, setLocation] = useRecoilState(curLocation);
   // const [reportOk, setReportOk] = useState(false);
-  const [reportedId, setReportedId] = useState("");
+  const [docId, setDocId] = useState("");
+  const [clsStr, setClsStr] = useState("");
 
   //데이터 한번에 읽어오기
   const getData = async () => {
@@ -75,22 +76,28 @@ const Board = () => {
     setRefreshing(false);
   };
 
-  const onDelete = async (id: string) => {
-    await deleteDoc(doc(db, "wauwt", id));
-    setRefreshing(true);
-  };
-
-  const onReport = async (id: string, reportOk?: boolean) => {
-    setReportedId(id);
+  const onReportDelete = async (
+    clsstr: string,
+    id: string,
+    reportOk?: boolean
+  ) => {
+    setDocId(id);
+    setClsStr(clsstr);
     if (reportOk) {
-      const reportedDoc = doc(db, "wauwt", id);
-      await updateDoc(reportedDoc, {
-        reportedCount: increment(1),
-      }).then(() => {
-        setReportedId("");
-      });
+      if (clsstr === "delete") {
+        await deleteDoc(doc(db, "wauwt", id)).then(() => {
+          setDocId("");
+        });
+      } else if (clsstr === "report") {
+        const reportedDoc = doc(db, "wauwt", id);
+        await updateDoc(reportedDoc, {
+          reportedCount: increment(1),
+        }).then(() => {
+          setDocId("");
+        });
+      }
     } else if (reportOk !== undefined && !reportOk) {
-      setReportedId("");
+      setDocId("");
     }
 
     setRefreshing(true);
@@ -111,19 +118,21 @@ const Board = () => {
               // reportedId === data.id ? "bg-red-100" : "bg-white"
             )}
           >
-            {reportedId === data.id ? (
+            {docId === data.id ? (
               <div className="text-center">
                 <h2 className="font-semibold text-red-700 pb-2">
-                  해당 글을 신고하시겠어요?
+                  {`해당 글을 ${
+                    clsStr === "delete" ? "삭제" : "신고"
+                  }하시겠어요?`}
                 </h2>
                 <button
-                  onClick={() => onReport(data.id, true)}
+                  onClick={() => onReportDelete(clsStr, data.id, true)}
                   className="px-4 h-10 text-white bg-red-600 rounded-md text-sm"
                 >
                   YES
                 </button>
                 <button
-                  onClick={() => onReport(data.id, false)}
+                  onClick={() => onReportDelete(clsStr, data.id, false)}
                   className="px-4 h-10 text-white bg-zinc-500 rounded-md text-sm ml-3"
                 >
                   NO
@@ -148,14 +157,14 @@ const Board = () => {
                           </p>
                           {data.uid === userInfo.uid ? (
                             <button
-                              onClick={() => onDelete(data.id)}
+                              onClick={() => onReportDelete("delete", data.id)}
                               className="p-1 px-2 text-white bg-red-600 rounded-md text-sm"
                             >
                               삭제
                             </button>
                           ) : (
                             <button
-                              onClick={() => onReport(data.id)}
+                              onClick={() => onReportDelete("report", data.id)}
                               className="p-1 px-2 text-white bg-red-600 rounded-md text-sm"
                             >
                               신고
