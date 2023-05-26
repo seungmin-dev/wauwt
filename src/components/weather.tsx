@@ -49,8 +49,8 @@ const Weather = () => {
   }, [location]);
 
   return (
-    <div style={{ flexGrow: 1, paddingRight: "10px" }}>
-      <div className="flex">
+    <div className="flex-grow pr-5">
+      <div className="flex mb-1">
         {addr ? (
           <>
             <p className="pr-2 font-semibold">현재 위치</p>
