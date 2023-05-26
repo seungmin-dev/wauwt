@@ -131,7 +131,7 @@ const Home = () => {
           </button>
         </div>
       </div>
-      <div className="p-6 w-full h-5/6 overflow-y-scroll">
+      <div className="px-6 py-4 w-full flex-grow overflow-hidden">
         <Board />
       </div>
     </Layout>

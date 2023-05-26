@@ -32,7 +32,7 @@ export default function Layout({ children }: LayoutProps) {
       ) : (
         ""
       )}
-      <div className="w-[28rem] h-[48rem] bg-white/60 m-auto rounded-3xl relative shadow-2xl">
+      <div className="w-[28rem] h-[48rem] bg-white/60 m-auto rounded-3xl relative shadow-2xl flex flex-col">
         {children}
       </div>
       <div>

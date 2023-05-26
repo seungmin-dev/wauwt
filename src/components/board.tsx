@@ -108,7 +108,7 @@ const Board = () => {
   }, [refreshing]);
   return (
     <>
-      <div>
+      <div className="w-full h-full overflow-y-scroll">
         {contents?.map((data: Content, index: number) => (
           <div
             key={index}
