@@ -8,6 +8,18 @@
 <img width="600" alt="스크린샷 2023-05-26 오후 12 13 11" src="https://github.com/seungmin-dev/wauwt/assets/67530394/376a61c6-00f5-4cda-8f2e-735020419d0e">
 </p>
 
+### ✨ 기술스택
+
+<div style="flex">
+  <img src="https://img.shields.io/badge/nextjs-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"> 
+  <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"> 
+    <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"> 
+  <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white"> 
+  <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"> 
+</div>
+<br/>
+<hr/><br/>
+
 ### 🔧 기능 설명
 
 #### 거리 제한
