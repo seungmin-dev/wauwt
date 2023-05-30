@@ -43,9 +43,11 @@
 <div>
   <img width="500" alt="스크린샷 2023-05-26 오전 11 32 08" src="https://github.com/seungmin-dev/wauwt/assets/67530394/f4b99e69-9746-4b73-9c30-595077c93b35">
   <img width="500" alt="스크린샷 2023-05-26 오전 11 43 09" src="https://github.com/seungmin-dev/wauwt/assets/67530394/8243b7a2-b78a-4118-a140-7e4d67dc0a04">
+  <img width="500" alt="스크린샷 2023-05-29 오후 11 24 35" src="https://github.com/seungmin-dev/wauwt/assets/67530394/af0d0c14-8cc4-49e3-bfcd-558b9f65badf">
 </div>
 
-사이트에 진입하면 위치에 기반한 날씨정보를 받아오기 위해 잠시 로딩화면이 보입니다<br/><br/>
+사이트에 진입하면 위치에 기반한 날씨정보를 받아오기 위해 잠시 로딩화면이 보입니다<br/>
+현재 날씨와 시간대에 따라(낮, 밤) 배경화면이 바뀝니다.<br/><br/>
   
 <div style="display: flex; align-items: center; justify-content: space-around">
   <img width="330" alt="스크린샷 2023-05-26 오전 11 46 55" src="https://github.com/seungmin-dev/wauwt/assets/67530394/a0a3e075-2bcb-43e1-af2e-0d7562d2b65b">
